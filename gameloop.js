@@ -18,7 +18,7 @@ let circleTop;
 
 // Initialize circle position and velocity
 let circleVelocity = 0; // Initial velocity
-const coefficientOfRestitution = 0.7; // Adjust as needed
+const coefficientOfRestitution = 0.6; // Adjust as needed
 const energyLossFactor = 0.9; // Adjust to control energy loss (should be less than 1)
 
 function gameLoop() {
@@ -84,7 +84,7 @@ document.getElementById('option1').addEventListener('click', function() {
     // Calculate circleTop based on the rectangle's position and dimensions
     const rectangleTop = rectangle.offsetTop;
     const rectangleHeight = rectangle.clientHeight;
-    circleTop = rectangleTop + (rectangleHeight / 2) - (circleElement.clientHeight / 2);
+    circleTop = rectangleHeight - circleElement.clientHeight;
 
     gameLoop();
 });
