@@ -12,7 +12,26 @@ function gameLoop() {
 createTitleScreen();
 
 document.getElementById('option1').addEventListener('click', function() {
+    // Remove all buttons from the screen
+    const options = document.querySelector('.options');
+    options.style.display = 'none';
+
+    // Create a rectangle element
+    const rectangle = document.createElement('div');
+    rectangle.classList.add('rectangle');
+
+    // Append the rectangle to the body
+    document.body.appendChild(rectangle);
+
+    // Create a circle element
+    const circle = document.createElement('div');
+    circle.classList.add('circle');
+
+// Append the circle to the body
+    document.body.appendChild(circle);
+
 });
+
 document.getElementById('option2').addEventListener('click', function() {
 });
 document.getElementById('option3').addEventListener('click', function() {

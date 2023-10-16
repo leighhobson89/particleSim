@@ -49,3 +49,28 @@ body {
 .option:hover {
     background-color: #0056b3;
 }
+
+.rectangle {
+    width: 50%;
+    height: 50%;
+    border: 1px solid white;
+    display: flex;
+    justify-content: center; /* Center horizontally */
+    align-items: flex-end; /* Align at the bottom of the screen */
+    position: absolute;
+    left: 25%; /* Center the rectangle by adjusting the left position */
+    bottom: 20%;
+}
+
+.circle {
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    background-color: lightblue;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%); /* Center the circle within its container */
+}
+
+

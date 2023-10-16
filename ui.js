@@ -5,7 +5,7 @@ export function createTitleScreen() {
     titleScreen.classList.add('title-screen');
 
     const title = document.createElement('h1');
-    title.textContent = 'Pocket Planes Remake';
+    title.textContent = 'Particle Simulator';
     title.classList.add('title');
 
     const options = document.createElement('div');
