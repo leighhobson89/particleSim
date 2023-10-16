@@ -1,8 +1,12 @@
 import { createTitleScreen, toggleSound } from './ui.js';
 
-// Define frame rate (60 FPS)
+// Define frame rate (120 FPS)
 const targetFrameRate = 60;
 const frameDelay = 1000 / targetFrameRate;
+
+// Adjust pixelsPerMeter based on frame rate and gravity
+const gravity = 9.8; // m/s^2
+const pixelsPerMeter = (frameDelay / 1000) * targetFrameRate / gravity * 10;
 
 let frameCount = 0;
 let lastSecond = performance.now();
@@ -10,14 +14,12 @@ let lastFrameTime = performance.now();
 
 // Initialize a flag to track whether the circle is on screen
 let isCircleOnScreen = false;
+let circleTop;
 
 // Initialize circle position and velocity
-let circleLeft = 0; // Initial position
 let circleVelocity = 0; // Initial velocity
-
-// Gravity parameters
-const gravity = 9.8; // m/s^2
-const pixelsPerMeter = 10; // Adjust for your game's scale
+const coefficientOfRestitution = 0.7; // Adjust as needed
+const energyLossFactor = 0.9; // Adjust to control energy loss (should be less than 1)
 
 function gameLoop() {
     const now = performance.now();
@@ -32,7 +34,13 @@ function gameLoop() {
         applyGravity();
 
         // Check for collision
-        // checkCollision();
+        if (checkCollision()) {
+            // If a collision is detected, bounce the circle and reduce energy
+            console.log("collision!");
+            circleVelocity = -circleVelocity * coefficientOfRestitution; // Bounce with opposite velocity
+            circleVelocity *= energyLossFactor; // Reduce energy
+            circleElement.style.top = circleTop + 'px'; // Update the circle's style
+        }
 
         // Redraw the screen
         redrawScreen();
@@ -55,6 +63,14 @@ document.getElementById('option1').addEventListener('click', function() {
     const options = document.querySelector('.options');
     options.style.display = 'none';
 
+    // Create a rectangle element
+    const rectangle = document.createElement('div');
+    rectangle.classList.add('rectangle');
+    rectangle.id = 'rectangle'; // Give it an id
+
+    // Append the rectangle to the body
+    document.body.appendChild(rectangle);
+
     // Create a circle element
     circleElement = document.createElement('div');
     circleElement.classList.add('circle');
@@ -63,16 +79,14 @@ document.getElementById('option1').addEventListener('click', function() {
     // Append the circle to the body
     document.body.appendChild(circleElement);
     isCircleOnScreen = true;
-    circleLeft = initialCircleLeft; // Set the initial position
     circleVelocity = 0; // Reset velocity
 
-    // Create a rectangle element
-    const rectangle = document.createElement('div');
-    rectangle.classList.add('rectangle');
-    rectangle.id = 'rectangle'; // Give it an id
+    // Calculate circleTop based on the rectangle's position and dimensions
+    const rectangleTop = rectangle.offsetTop;
+    const rectangleHeight = rectangle.clientHeight;
+    circleTop = rectangleTop + (rectangleHeight / 2) - (circleElement.clientHeight / 2);
 
-    // Append the rectangle to the body
-    document.body.appendChild(rectangle);
+    gameLoop();
 });
 
 document.getElementById('option2').addEventListener('click', function() {
@@ -83,21 +97,29 @@ document.getElementById('option4').addEventListener('click', function() {
     toggleSound();
 });
 
-// Check for collision
+let previousCircleTop = circleTop;
+
 function checkCollision() {
     const rectangleElement = document.getElementById('rectangle');
-
     const rect = rectangleElement.getBoundingClientRect();
     const circle = circleElement.getBoundingClientRect();
+    const collision =
+        rect.right <= circle.right ||
+        rect.left >= circle.left ||
+        rect.bottom <= circle.bottom ||
+        rect.top >= circle.top;
 
-    if (
-        rect.right >= circle.left &&
-        rect.left <= circle.right &&
-        rect.bottom >= circle.top &&
-        rect.top <= circle.bottom
-    ) {
-        // Collisions detected, you can add your collision handling code here
+    if (collision) {
+        // Collision detected, reset the circle's position to the previous position
+        circleTop = previousCircleTop;
+        circleElement.style.top = circleTop + 'px';
+        circleVelocity *= energyLossFactor; // Reduce energy
+    } else {
+        // Update the previous position when no collision is detected
+        previousCircleTop = circleTop;
     }
+
+    return collision;
 }
 
 // Redraw the screen (implement your redraw logic)
@@ -119,16 +141,24 @@ function applyGravity() {
     // Calculate the new velocity using the acceleration due to gravity
     circleVelocity += (gravity / pixelsPerMeter) * (frameDelay / 1000);
 
-    // Update the circle's position based on the velocity (horizontally)
-    circleLeft += circleVelocity;
+    // Calculate the circle's potential new position based on the velocity
+    const potentialCircleTop = circleTop + circleVelocity;
 
-    // Limit the circle's position to stay within the screen boundaries (horizontally)
-    const maxWidth = screenWidth - circleElement.clientWidth;
-    circleLeft = Math.min(circleLeft, maxWidth);
-    circleLeft = Math.max(circleLeft, 0);
+    // Limit the circle's position to stay within the screen boundaries (vertically)
+    const maxHeight = window.innerHeight - circleElement.clientHeight;
+    circleTop = Math.min(potentialCircleTop, maxHeight);
+    circleTop = Math.max(circleTop, 0);
 
     // Update the circle's style
-    circleElement.style.left = circleLeft + 'px';
+    circleElement.style.top = circleTop + 'px';
+
+    if (potentialCircleTop > maxHeight) {
+        // If the potential new position exceeds the screen bottom, stop the circle
+        circleVelocity = -circleVelocity * coefficientOfRestitution; // Bounce with opposite velocity
+        circleVelocity *= energyLossFactor; // Reduce energy
+        circleTop = maxHeight;
+        circleElement.style.top = circleTop + 'px';
+    }
 }
 
 // Function to check gravity (this will be called each frame)
