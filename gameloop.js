@@ -4,29 +4,42 @@ import { createTitleScreen, toggleSound } from './ui.js';
 const targetFrameRate = 60;
 const frameDelay = 1000 / targetFrameRate;
 
-// Initialize last frame timestamp
-let lastTimestamp = 0;
+let frameCount = 0;
+let lastSecond = performance.now();
+let lastFrameTime = performance.now();
 
 // Initialize a flag to track whether the circle is on screen
 let isCircleOnScreen = false;
 
-function gameLoop(timestamp) {
-    // Calculate the time elapsed since the last frame
-    const elapsed = timestamp - lastTimestamp;
+// Initialize circle position and velocity
+let circleLeft = 0; // Initial position
+let circleVelocity = 0; // Initial velocity
 
-    // Update your game logic here
+// Gravity parameters
+const gravity = 9.8; // m/s^2
+const pixelsPerMeter = 10; // Adjust for your game's scale
 
-    // Check for collision
-    //checkCollision();
+function gameLoop() {
+    const now = performance.now();
+    const elapsed = now - lastFrameTime;
 
-    // Redraw the screen
-    redrawScreen();
+    if (elapsed >= frameDelay) {
+        lastFrameTime = now;
 
-    // Request the next frame
-    requestAnimationFrame(gameLoop);
+        // Update your game logic here
 
-    // Update the last frame timestamp
-    lastTimestamp = timestamp;
+        // Apply gravity to the circle
+        applyGravity();
+
+        // Check for collision
+        // checkCollision();
+
+        // Redraw the screen
+        redrawScreen();
+    }
+
+    // Request the next frame with a fixed delay
+    setTimeout(gameLoop, frameDelay);
 }
 
 createTitleScreen();
@@ -34,20 +47,24 @@ createTitleScreen();
 const screenWidth = window.innerWidth; // Get the screen width
 const initialCircleLeft = screenWidth / 2; // Set it to half of the screen width
 
-// Create a circle element
-const circle = document.createElement('div');
-circle.classList.add('circle');
-circle.id = 'circle'; // Give it an id
+// Define circleElement here, but don't assign it yet
+let circleElement;
 
 document.getElementById('option1').addEventListener('click', function() {
-
     // Remove all buttons from the screen
     const options = document.querySelector('.options');
     options.style.display = 'none';
 
+    // Create a circle element
+    circleElement = document.createElement('div');
+    circleElement.classList.add('circle');
+    circleElement.id = 'circle'; // Give it an id
+
     // Append the circle to the body
-    document.body.appendChild(circle);
+    document.body.appendChild(circleElement);
     isCircleOnScreen = true;
+    circleLeft = initialCircleLeft; // Set the initial position
+    circleVelocity = 0; // Reset velocity
 
     // Create a rectangle element
     const rectangle = document.createElement('div');
@@ -56,7 +73,6 @@ document.getElementById('option1').addEventListener('click', function() {
 
     // Append the rectangle to the body
     document.body.appendChild(rectangle);
-    gameLoop(0); // Start the game loop
 });
 
 document.getElementById('option2').addEventListener('click', function() {
@@ -70,7 +86,6 @@ document.getElementById('option4').addEventListener('click', function() {
 // Check for collision
 function checkCollision() {
     const rectangleElement = document.getElementById('rectangle');
-    const circleElement = document.getElementById('circle');
 
     const rect = rectangleElement.getBoundingClientRect();
     const circle = circleElement.getBoundingClientRect();
@@ -92,21 +107,50 @@ function redrawScreen() {
         return;
     }
 
-    const circleElement = document.getElementById('circle');
-    const rectangleElement = document.getElementById('rectangle');
+    // Instead of moving the circle, call the checkGravity function
+    checkGravity();
 
-    const circleLeft = parseInt(circleElement.style.left, 10) || initialCircleLeft;
-
-    const newLeft = circleLeft + 1; // Move 1 pixel to the right
-
-    // Update the position of the circle
-    circleElement.style.left = newLeft + 'px';
-
-    // Check if the circle has gone beyond the right boundary and reset it
-    if (newLeft > window.innerWidth) {
-        circleElement.style.left = '0';
-    }
+    // Update the FPS display
+    updateFPS();
 }
 
-// Request the first frame
-requestAnimationFrame(gameLoop);
+// Function to apply gravity to the circle
+function applyGravity() {
+    // Calculate the new velocity using the acceleration due to gravity
+    circleVelocity += (gravity / pixelsPerMeter) * (frameDelay / 1000);
+
+    // Update the circle's position based on the velocity (horizontally)
+    circleLeft += circleVelocity;
+
+    // Limit the circle's position to stay within the screen boundaries (horizontally)
+    const maxWidth = screenWidth - circleElement.clientWidth;
+    circleLeft = Math.min(circleLeft, maxWidth);
+    circleLeft = Math.max(circleLeft, 0);
+
+    // Update the circle's style
+    circleElement.style.left = circleLeft + 'px';
+}
+
+// Function to check gravity (this will be called each frame)
+function checkGravity() {
+    // Apply gravity by calling applyGravity
+    applyGravity();
+}
+
+// Function to update the FPS display
+function updateFPS() {
+    frameCount++;
+
+    // Get the current timestamp
+    const now = performance.now();
+
+    if (now - lastSecond >= 1000) {
+        // If 1 second has passed, update the FPS
+        const fps = frameCount;
+        const fpsElement = document.querySelector('.clock');
+        fpsElement.textContent = `FPS: ${fps}`;
+
+        frameCount = 0;
+        lastSecond = now; // Update the lastSecond timestamp
+    }
+}
