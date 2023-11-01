@@ -1,5 +1,6 @@
 // ui.js
 
+export const container = document.createElement('div');
 export function createTitleScreen() {
     const titleScreen = document.createElement('div');
     titleScreen.classList.add('title-screen');
@@ -34,7 +35,16 @@ export function createTitleScreen() {
 
     // Append the title screen to the body
     document.body.appendChild(titleScreen);
+
+    // Create a container element and give it an ID
+
+    container.classList.add('container');
+    container.id = 'container';
+    document.body.appendChild(container);
 }
+
+export const containerWidth = container.clientWidth;
+export const containerHeight = container.clientHeight;
 
 export function toggleSound() {
     const soundOption = document.getElementById('option4');
@@ -50,4 +60,13 @@ export function toggleSound() {
         // Call your "toggleSound(off)" function here
     }
 }
+
+export function getContainerWidth() {
+    return container.clientWidth;
+}
+
+export function getContainerHeight() {
+    return container.clientHeight;
+}
+
 

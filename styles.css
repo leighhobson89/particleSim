@@ -50,11 +50,11 @@ body {
     background-color: #0056b3;
 }
 
-.rectangle {
+.container {
+    display: none;
     width: 50%;
     height: 50%;
-    border: 1px solid white;
-    display: flex;
+    border: 2px solid white;
     justify-content: center; /* Center horizontally */
     align-items: flex-end; /* Align at the bottom of the screen */
     position: absolute;
@@ -64,14 +64,21 @@ body {
 
 .circle {
     display: flex;
-    width: 20px;
-    height: 20px;
+    width: 5px;
+    height: 5px;
     border-radius: 50%;
     background-color: lightblue;
     position: absolute;
     top: 50%;
     left: 50%;
     transform: translate(-50%, -50%); /* Center the circle within its container */
+}
+
+#particleCanvas {
+    background-color: #1a1a1a;
+    position: absolute;
+    top: 0;
+    left: 0;
 }
 
 
