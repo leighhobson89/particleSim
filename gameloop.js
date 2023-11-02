@@ -3,8 +3,9 @@ import {createTitleScreen, toggleSound, getContainerWidth, getContainerHeight, c
 // Define frame rate (60 FPS)
 const targetFrameRate = 60;
 const frameDelay = 1000 / targetFrameRate;
+const colorState = 0
 
-const BOUNCES_BEFORE_STOP = 100;
+const BOUNCES_BEFORE_STOP = 25;
 
 // Adjust pixelsPerMeter based on frame rate and gravity
 const gravity = 9.8; // m/s^2
@@ -15,9 +16,10 @@ let frameCount = 0;
 let lastSecond = performance.now();
 let lastFrameTime = performance.now();
 let areCirclesOnScreen = false;
+let loadFlag = false;
 
 let circles = [];
-const numCircles = 10; // Number of circles to create
+const numCircles = 40; // Number of circles to create
 const coefficientOfRestitution = 0.7; // Adjust as needed
 const energyLossFactor = 0.9; // Adjust to control energy loss (should be less than 1)
 
@@ -28,32 +30,36 @@ function gameLoop() {
     if (elapsed >= frameDelay) {
         lastFrameTime = now;
 
-        // Apply gravity and check collisions for each circle
-        for (let i = 0; i < numCircles; i++) {
-            const circleElement = circles[i];
+        console.log(loadFlag);
+        if (loadFlag) {
+            for (let i = 0; i < numCircles; i++) {
+                const circleElement = circles[i];
 
-            // Apply gravity to the circle
-            let bounceCount = applyGravity(circleElement);
-            if (bounceCount < BOUNCES_BEFORE_STOP) {
-                applyLateralMotion(circleElement, bounceCount);
-            }
+                let bounceCount = applyGravity(circleElement);
+                if (bounceCount < BOUNCES_BEFORE_STOP) {
+                    applyLateralMotion(circleElement, bounceCount);
+                }
 
-            // Check for collision
-            if (checkCollision(circleElement)) {
+                // Check for collision
+                if (checkCollision(circleElement)) {
+                }
             }
         }
 
-        // Redraw the screen
-        redrawScreen();
+        requestAnimationFrame(gameLoop);
+    } else {
+        requestAnimationFrame(gameLoop);
     }
-
-    // Request the next frame with a fixed delay
-    setTimeout(gameLoop, frameDelay);
 }
+
+// Start the game loop by calling requestAnimationFrame
+requestAnimationFrame(gameLoop);
+
 
 createTitleScreen();
 
 document.getElementById('option1').addEventListener('click', function () {
+    loadFlag = true;
 
     // Remove all buttons from the screen
     const options = document.querySelector('.options');
@@ -79,6 +85,11 @@ document.getElementById('option4').addEventListener('click', function () {
     toggleSound();
 });
 
+document.getElementById('inGameOption1').addEventListener('click', function () {
+    loadFlag = true;
+    clearAndRecreateCircles();
+});
+
 function checkCollision(circleElement) {
     const container = document.getElementById('container');
     const containerRect = container.getBoundingClientRect();
@@ -92,7 +103,7 @@ function checkCollision(circleElement) {
     if (collisionTop || collisionBottom) {
         // Handle collision with top and bottom edges
         let circleVelocity = parseFloat(circleElement.getAttribute('data-velocity'));
-        circleVelocity = -circleVelocity * coefficientOfRestitution;
+        circleVelocity = -circleVelocity * coefficientOfRestitution * 1.2;
         circleVelocity *= energyLossFactor;
 
         circleElement.setAttribute('data-velocity', circleVelocity);
@@ -101,7 +112,7 @@ function checkCollision(circleElement) {
     if (collisionLeft || collisionRight) {
         // Handle collision with left and right edges
         let circleLateralVelocity = parseFloat(circleElement.getAttribute('data-lateral-velocity'));
-        circleLateralVelocity = -circleLateralVelocity; // Reverse the lateral velocity
+        circleLateralVelocity = (-circleLateralVelocity * energyLossFactor); // Reverse the lateral velocity
         // circleLateralVelocity *= energyLossFactor;
         circleElement.setAttribute('data-lateral-velocity', circleLateralVelocity);
     }
@@ -116,8 +127,7 @@ function createCircles(maxWidth, maxHeight) {
         circleElement.classList.add('circle');
         circleElement.style.backgroundColor = getRandomRGBColor(); // Set random background color
 
-        const initialLateralVelocity = (Math.random() - 0.5) * 40; // Adjust the range as needed
-        // const initialLateralVelocity = Math.random() * 20; // You can adjust the magnitude of the lateral force
+        const initialLateralVelocity = (Math.random() - 0.5) * 25; // Adjust the range as needed
         circleElement.setAttribute('data-lateral-velocity', initialLateralVelocity.toString()); // Convert to string
 
         circleElement.setAttribute('data-velocity', 0); // Initialize velocity to 0
@@ -196,7 +206,7 @@ function applyGravity(circleElement) {
         }
     } else if (potentialTop < 0) { // Check for collision with the top
         circleVelocity = -circleVelocity * coefficientOfRestitution; // Bounce with opposite velocity
-        circleVelocity *= (energyLossFactor); // Reduce energy
+        circleVelocity *= energyLossFactor; // Reduce energy
 
         // Ensure the circle doesn't go above the container
         circleElement.style.top = Math.max(0, potentialTop) + 'px';
@@ -258,3 +268,37 @@ function getRandomRGBColor() {
     const b = Math.floor(Math.random() * 256);
     return `rgb(${r},${g},${b})`;
 }
+
+function clearAndRecreateCircles() {
+    // Clear existing circles
+    for (const circleElement of circles) {
+        circleElement.remove();
+    }
+    circles = [];
+
+    let containerWidth = getContainerWidth();
+    let containerHeight = getContainerHeight();
+
+    createCircles(containerWidth, containerHeight);
+
+    areCirclesOnScreen = true;
+
+    gameLoop();
+}
+
+function toggleCircleColors() {
+    // Toggle colorState between 0 and 1
+    colorState = 1 - colorState;
+
+    for (const circleElement of circles) {
+        if (colorState === 0) {
+            // Assign random colors
+            const randomColor = getRandomRGBColor();
+            circleElement.style.backgroundColor = randomColor;
+        } else {
+            // Set all circles to white
+            circleElement.style.backgroundColor = 'rgb(255, 255, 255)';
+        }
+    }
+}
+
