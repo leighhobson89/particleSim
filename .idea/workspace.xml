@@ -4,10 +4,10 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="bc22efed-34bf-46e1-882e-35b53132cf83" name="Changes" comment="particles can now move to the right and collide with the right edge">
+    <list default="true" id="bc22efed-34bf-46e1-882e-35b53132cf83" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/gameloop.js" beforeDir="false" afterPath="$PROJECT_DIR$/gameloop.js" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/styles.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ui.js" beforeDir="false" afterPath="$PROJECT_DIR$/ui.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -16,6 +16,20 @@
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="GitHubPullRequestSearchHistory"><![CDATA[{
+  "lastFilter": {
+    "state": "OPEN",
+    "assignee": "leighhobson89"
+  }
+}]]></component>
+  <component name="GithubPullRequestsUISettings">
+    <option name="selectedUrlAndAccountId">
+      <UrlAndAccount>
+        <option name="accountId" value="c6df0d0d-fec4-4fda-81c0-59e11aa535f8" />
+        <option name="url" value="https://github.com/leighhobson89/particleSim" />
+      </UrlAndAccount>
+    </option>
   </component>
   <component name="HighlightingSettingsPerFile">
     <setting file="file://$PROJECT_DIR$/gameloop.js" root0="FORCE_HIGHLIGHTING" />
@@ -77,7 +91,7 @@
       <workItem from="1697470717090" duration="3758000" />
       <workItem from="1698912260467" duration="2940000" />
       <workItem from="1698937212781" duration="3615000" />
-      <workItem from="1698942228220" duration="3485000" />
+      <workItem from="1698942228220" duration="4148000" />
     </task>
     <task id="LOCAL-00001" summary="tidy up">
       <option name="closed" value="true" />
@@ -103,7 +117,15 @@
       <option name="project" value="LOCAL" />
       <updated>1698939809147</updated>
     </task>
-    <option name="localTasksCounter" value="4" />
+    <task id="LOCAL-00004" summary="menu option 1 fixed">
+      <option name="closed" value="true" />
+      <created>1698945772394</created>
+      <option name="number" value="00004" />
+      <option name="presentableId" value="LOCAL-00004" />
+      <option name="project" value="LOCAL" />
+      <updated>1698945772394</updated>
+    </task>
+    <option name="localTasksCounter" value="5" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">
@@ -115,6 +137,7 @@
     </ignored-roots>
     <MESSAGE value="tidy up" />
     <MESSAGE value="particles can now move to the right and collide with the right edge" />
-    <option name="LAST_COMMIT_MESSAGE" value="particles can now move to the right and collide with the right edge" />
+    <MESSAGE value="menu option 1 fixed" />
+    <option name="LAST_COMMIT_MESSAGE" value="menu option 1 fixed" />
   </component>
 </project>

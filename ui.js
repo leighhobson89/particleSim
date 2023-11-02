@@ -26,7 +26,7 @@ export function createTitleScreen() {
     // Define the option names and their initial colors
     const inGameOptionInfo = [
         { name: 'Start Again', color: '#007bff' },
-        { name: 'Random Colors', color: '#007bff' },
+        { name: 'White Coloured Particles', color: '#007bff' },
         { name: 'Number Of Particles', color: '#007bff' },
         { name: 'Bounce Height', color: '#00cc00' }
     ];

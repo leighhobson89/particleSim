@@ -3,7 +3,7 @@ import {createTitleScreen, toggleSound, getContainerWidth, getContainerHeight, c
 // Define frame rate (60 FPS)
 const targetFrameRate = 60;
 const frameDelay = 1000 / targetFrameRate;
-const colorState = 0
+let colorState = 0
 
 const BOUNCES_BEFORE_STOP = 25;
 
@@ -90,6 +90,10 @@ document.getElementById('inGameOption1').addEventListener('click', function () {
     clearAndRecreateCircles();
 });
 
+document.getElementById('inGameOption2').addEventListener('click', function () {
+    toggleCircleColors();
+});
+
 function checkCollision(circleElement) {
     const container = document.getElementById('container');
     const containerRect = container.getBoundingClientRect();
@@ -125,7 +129,9 @@ function createCircles(maxWidth, maxHeight) {
     for (let i = 0; i < numCircles; i++) {
         const circleElement = document.createElement('div');
         circleElement.classList.add('circle');
-        circleElement.style.backgroundColor = getRandomRGBColor(); // Set random background color
+        if (colorState === 0) {
+            circleElement.style.backgroundColor = getRandomRGBColor(); // Set random background color
+        }
 
         const initialLateralVelocity = (Math.random() - 0.5) * 25; // Adjust the range as needed
         circleElement.setAttribute('data-lateral-velocity', initialLateralVelocity.toString()); // Convert to string
@@ -294,9 +300,11 @@ function toggleCircleColors() {
         if (colorState === 0) {
             // Assign random colors
             const randomColor = getRandomRGBColor();
+            document.getElementById('inGameOption2').innerText = "White Coloured Particles";
             circleElement.style.backgroundColor = randomColor;
         } else {
             // Set all circles to white
+            document.getElementById('inGameOption2').innerText = "Random Coloured Particles";
             circleElement.style.backgroundColor = 'rgb(255, 255, 255)';
         }
     }
