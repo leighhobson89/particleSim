@@ -4,8 +4,7 @@ import {createTitleScreen, toggleSound, getContainerWidth, getContainerHeight, c
 const targetFrameRate = 60;
 const frameDelay = 1000 / targetFrameRate;
 
-const BOUNCES_BEFORE_STOP = 10;
-
+const BOUNCES_BEFORE_STOP = 100;
 
 // Adjust pixelsPerMeter based on frame rate and gravity
 const gravity = 9.8; // m/s^2
@@ -18,9 +17,9 @@ let lastFrameTime = performance.now();
 let areCirclesOnScreen = false;
 
 let circles = [];
-const numCircles = 100; // Number of circles to create
-const coefficientOfRestitution = 0.6; // Adjust as needed
-const energyLossFactor = 0.90; // Adjust to control energy loss (should be less than 1)
+const numCircles = 10; // Number of circles to create
+const coefficientOfRestitution = 0.7; // Adjust as needed
+const energyLossFactor = 0.9; // Adjust to control energy loss (should be less than 1)
 
 function gameLoop() {
     const now = performance.now();
@@ -83,9 +82,9 @@ function checkCollision(circleElement) {
     const circleRect = circleElement.getBoundingClientRect();
 
     const collisionTop = circleRect.top <= containerRect.top;
-    const collisionBottom = circleRect.bottom >= containerRect.bottom;
-    const collisionLeft = circleRect.left <= containerRect.left;
-    const collisionRight = circleRect.right >= containerRect.right;
+    const collisionBottom = circleRect.bottom >= containerRect.bottom + 4;
+    const collisionLeft = circleRect.left <= containerRect.left + 5;
+    const collisionRight = circleRect.right >= containerRect.right -5;
 
     if (collisionTop || collisionBottom) {
         // Handle collision with top and bottom edges
@@ -100,6 +99,7 @@ function checkCollision(circleElement) {
         // Handle collision with left and right edges
         let circleLateralVelocity = parseFloat(circleElement.getAttribute('data-lateral-velocity'));
         circleLateralVelocity = -circleLateralVelocity; // Reverse the lateral velocity
+        // circleLateralVelocity *= energyLossFactor;
         circleElement.setAttribute('data-lateral-velocity', circleLateralVelocity);
     }
 
@@ -107,17 +107,14 @@ function checkCollision(circleElement) {
 }
 
 
-
-
-
-
 function createCircles(maxWidth, maxHeight) {
     for (let i = 0; i < numCircles; i++) {
         const circleElement = document.createElement('div');
         circleElement.classList.add('circle');
-        // circleElement.style.backgroundColor = getRandomRGBColor(); // Set random background color
+        circleElement.style.backgroundColor = getRandomRGBColor(); // Set random background color
 
-        const initialLateralVelocity = Math.random() * 20; // You can adjust the magnitude of the lateral force
+        const initialLateralVelocity = (Math.random() - 0.5) * 40; // Adjust the range as needed
+        // const initialLateralVelocity = Math.random() * 20; // You can adjust the magnitude of the lateral force
         circleElement.setAttribute('data-lateral-velocity', initialLateralVelocity.toString()); // Convert to string
 
         circleElement.setAttribute('data-velocity', 0); // Initialize velocity to 0
@@ -138,7 +135,12 @@ function createCircles(maxWidth, maxHeight) {
 }
 
 // Function to apply lateral motion to a single circle element
-function applyLateralMotion(circleElement) {
+function applyLateralMotion(circleElement, bounceCount) {
+
+    const container = document.getElementById('container');
+    const containerRect = container.getBoundingClientRect();
+    const circleRect = circleElement.getBoundingClientRect();
+
     const lateralVelocity = parseFloat(circleElement.getAttribute('data-lateral-velocity'));
 
     // Get the current horizontal position of the circle
@@ -149,6 +151,10 @@ function applyLateralMotion(circleElement) {
 
     // Update the circle's horizontal position
     circleElement.style.left = potentialLeft + 'px';
+
+    if ((circleRect.left <= containerRect.left - 4 || circleRect.right >= containerRect.right + 4) && bounceCount >= BOUNCES_BEFORE_STOP) {
+        circleElement.setAttribute('data-lateral-velocity', 0);
+    }
 }
 
 // Function to apply gravity to a single circle element
@@ -249,5 +255,3 @@ function getRandomRGBColor() {
     const b = Math.floor(Math.random() * 256);
     return `rgb(${r},${g},${b})`;
 }
-
-
