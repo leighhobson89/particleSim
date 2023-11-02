@@ -4,6 +4,8 @@ import {createTitleScreen, toggleSound, getContainerWidth, getContainerHeight, c
 const targetFrameRate = 60;
 const frameDelay = 1000 / targetFrameRate;
 
+const BOUNCES_BEFORE_STOP = 10;
+
 
 // Adjust pixelsPerMeter based on frame rate and gravity
 const gravity = 9.8; // m/s^2
@@ -32,7 +34,10 @@ function gameLoop() {
             const circleElement = circles[i];
 
             // Apply gravity to the circle
-            applyGravity(circleElement);
+            let bounceCount = applyGravity(circleElement);
+            if (bounceCount < BOUNCES_BEFORE_STOP) {
+                applyLateralMotion(circleElement, bounceCount);
+            }
 
             // Check for collision
             if (checkCollision(circleElement)) {
@@ -72,37 +77,49 @@ document.getElementById('option4').addEventListener('click', function () {
     toggleSound();
 });
 
-let previousCircleTop = [];
-
 function checkCollision(circleElement) {
     const container = document.getElementById('container');
     const containerRect = container.getBoundingClientRect();
     const circleRect = circleElement.getBoundingClientRect();
 
-    const collision =
-        circleRect.right <= containerRect.right ||
-        circleRect.left >= containerRect.left ||
-        circleRect.bottom <= containerRect.bottom ||
-        circleRect.top >= containerRect.top;
+    const collisionTop = circleRect.top <= containerRect.top;
+    const collisionBottom = circleRect.bottom >= containerRect.bottom;
+    const collisionLeft = circleRect.left <= containerRect.left;
+    const collisionRight = circleRect.right >= containerRect.right;
 
-    if (collision) {
-        // Collision detected, reset the circle's position to the previous position
-        circleElement.style.top = previousCircleTop[circles.indexOf(circleElement)] + 'px';
-        // Handle collision for each circle as needed
-    } else {
-        // Update the previous position when no collision is detected
-        previousCircleTop[circles.indexOf(circleElement)] = parseFloat(circleElement.style.top);
+    if (collisionTop || collisionBottom) {
+        // Handle collision with top and bottom edges
+        let circleVelocity = parseFloat(circleElement.getAttribute('data-velocity'));
+        circleVelocity = -circleVelocity * coefficientOfRestitution;
+        circleVelocity *= energyLossFactor;
+
+        circleElement.setAttribute('data-velocity', circleVelocity);
     }
 
-    return collision;
+    if (collisionLeft || collisionRight) {
+        // Handle collision with left and right edges
+        let circleLateralVelocity = parseFloat(circleElement.getAttribute('data-lateral-velocity'));
+        circleLateralVelocity = -circleLateralVelocity; // Reverse the lateral velocity
+        circleElement.setAttribute('data-lateral-velocity', circleLateralVelocity);
+    }
+
+    return collisionTop || collisionBottom || collisionLeft || collisionRight;
 }
 
 
-function createCircles(maxWidth, maxHeight) {
 
+
+
+
+function createCircles(maxWidth, maxHeight) {
     for (let i = 0; i < numCircles; i++) {
         const circleElement = document.createElement('div');
         circleElement.classList.add('circle');
+        // circleElement.style.backgroundColor = getRandomRGBColor(); // Set random background color
+
+        const initialLateralVelocity = Math.random() * 20; // You can adjust the magnitude of the lateral force
+        circleElement.setAttribute('data-lateral-velocity', initialLateralVelocity.toString()); // Convert to string
+
         circleElement.setAttribute('data-velocity', 0); // Initialize velocity to 0
         circleElement.setAttribute('data-bounce-count', 0); // Initialize bounce count to 0
         let randomLeft = Math.random() * (maxWidth - circleElement.clientWidth);
@@ -118,6 +135,20 @@ function createCircles(maxWidth, maxHeight) {
         document.getElementById("container").appendChild(circleElement);
         circles.push(circleElement);
     }
+}
+
+// Function to apply lateral motion to a single circle element
+function applyLateralMotion(circleElement) {
+    const lateralVelocity = parseFloat(circleElement.getAttribute('data-lateral-velocity'));
+
+    // Get the current horizontal position of the circle
+    const currentLeft = parseFloat(circleElement.style.left);
+
+    // Calculate the potential new horizontal position based on the lateral velocity
+    const potentialLeft = currentLeft + lateralVelocity;
+
+    // Update the circle's horizontal position
+    circleElement.style.left = potentialLeft + 'px';
 }
 
 // Function to apply gravity to a single circle element
@@ -151,12 +182,12 @@ function applyGravity(circleElement) {
         bounceCount++;
 
         // Gradually reduce energy until velocity is very low and bounce count is reached
-        if (Math.abs(circleVelocity) < 10 && bounceCount >= 10) {
+        if (Math.abs(circleVelocity) < 10 && bounceCount >= BOUNCES_BEFORE_STOP) {
             circleVelocity = 0; // Stop when velocity is very low and bounce count is reached
         }
     } else if (potentialTop < 0) { // Check for collision with the top
         circleVelocity = -circleVelocity * coefficientOfRestitution; // Bounce with opposite velocity
-        circleVelocity *= energyLossFactor; // Reduce energy
+        circleVelocity *= (energyLossFactor); // Reduce energy
 
         // Ensure the circle doesn't go above the container
         circleElement.style.top = Math.max(0, potentialTop) + 'px';
@@ -164,7 +195,7 @@ function applyGravity(circleElement) {
         bounceCount++;
 
         // Gradually reduce energy until velocity is very low and bounce count is reached
-        if (Math.abs(circleVelocity) < 10 && bounceCount >= 50) {
+        if (Math.abs(circleVelocity) < 10 && bounceCount >= BOUNCES_BEFORE_STOP) {
             circleVelocity = 0; // Stop when velocity is very low and bounce count is reached
         }
     } else {
@@ -174,6 +205,8 @@ function applyGravity(circleElement) {
     // Update the circle's velocity and bounce count attributes
     circleElement.setAttribute('data-velocity', circleVelocity);
     circleElement.setAttribute('data-bounce-count', bounceCount);
+
+    return bounceCount;
 }
 
 // Redraw the screen (implement your redraw logic)
@@ -208,6 +241,13 @@ function updateFPS() {
         frameCount = 0;
         lastSecond = now; // Update the lastSecond timestamp
     }
+}
+
+function getRandomRGBColor() {
+    const r = Math.floor(Math.random() * 256);
+    const g = Math.floor(Math.random() * 256);
+    const b = Math.floor(Math.random() * 256);
+    return `rgb(${r},${g},${b})`;
 }
 
 

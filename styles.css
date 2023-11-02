@@ -64,8 +64,8 @@ body {
 
 .circle {
     display: flex;
-    width: 5px;
-    height: 5px;
+    width: 4px;
+    height: 4px;
     border-radius: 50%;
     background-color: lightblue;
     position: absolute;
