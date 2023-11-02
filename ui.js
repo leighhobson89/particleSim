@@ -43,9 +43,6 @@ export function createTitleScreen() {
     document.body.appendChild(container);
 }
 
-export const containerWidth = container.clientWidth;
-export const containerHeight = container.clientHeight;
-
 export function toggleSound() {
     const soundOption = document.getElementById('option4');
     const isSoundOn = soundOption.style.backgroundColor === 'rgb(255, 0, 0)'; // Red color

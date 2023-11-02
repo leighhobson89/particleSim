@@ -5,8 +5,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="bc22efed-34bf-46e1-882e-35b53132cf83" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/app.js" beforeDir="false" afterPath="$PROJECT_DIR$/app.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/gameloop.js" beforeDir="false" afterPath="$PROJECT_DIR$/gameloop.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/styles.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ui.js" beforeDir="false" afterPath="$PROJECT_DIR$/ui.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -34,7 +37,7 @@
     "RunOnceActivity.ShowReadmeOnStart": "true",
     "WebServerToolWindowFactoryState": "false",
     "git-widget-placeholder": "master",
-    "last_opened_file_path": "C:/Users/Leigh/Desktop/Development/particleSim",
+    "last_opened_file_path": "C:/Users/leigh/WebstormProjects/particleSim",
     "node.js.detected.package.eslint": "true",
     "node.js.detected.package.tslint": "true",
     "node.js.selected.package.eslint": "(autodetect)",
@@ -74,6 +77,7 @@
       <updated>1697463081567</updated>
       <workItem from="1697463082629" duration="719000" />
       <workItem from="1697470717090" duration="3758000" />
+      <workItem from="1698912260467" duration="352000" />
     </task>
     <servers />
   </component>

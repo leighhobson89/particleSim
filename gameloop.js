@@ -202,7 +202,7 @@ function updateFPS() {
     if (now - lastSecond >= 1000) {
         // If 1 second has passed, update the FPS
         const fps = frameCount;
-        const fpsElement = document.querySelector('.clock');
+        const fpsElement = document.querySelector('.framesCounter');
         fpsElement.textContent = `FPS: ${fps}`;
 
         frameCount = 0;
