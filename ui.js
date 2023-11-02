@@ -12,12 +12,23 @@ export function createTitleScreen() {
     const options = document.createElement('div');
     options.classList.add('options');
 
+    const inGameOptions = document.createElement('div');
+    inGameOptions.classList.add('inGameOptions');
+
     // Define the option names and their initial colors
     const optionInfo = [
         { name: 'New Game', color: '#007bff' },    // Blue
         { name: 'Load Game', color: '#007bff' },   // Blue
         { name: 'Help', color: '#007bff' },        // Blue
         { name: 'Toggle Sound', color: '#00cc00' } // Green
+    ];
+
+    // Define the option names and their initial colors
+    const inGameOptionInfo = [
+        { name: 'Start Again', color: '#007bff' },
+        { name: 'Random Colors', color: '#007bff' },
+        { name: 'Number Of Particles', color: '#007bff' },
+        { name: 'Bounce Height', color: '#00cc00' }
     ];
 
     // Create and append clickable options
@@ -30,13 +41,22 @@ export function createTitleScreen() {
         options.appendChild(option);
     }
 
+    for (let i = 0; i < inGameOptionInfo.length; i++) {
+        const inGameOption = document.createElement('div');
+        inGameOption.textContent = inGameOptionInfo[i].name;
+        inGameOption.classList.add('inGameOption');
+        inGameOption.style.backgroundColor = inGameOptionInfo[i].color;
+        inGameOption.id = `inGameOption${i + 1}`;
+        inGameOptions.appendChild(inGameOption);
+    }
+
     titleScreen.appendChild(title);
     titleScreen.appendChild(options);
+    titleScreen.appendChild(inGameOptions);
+    // inGameOptions.style.display = 'none';
 
     // Append the title screen to the body
     document.body.appendChild(titleScreen);
-
-    // Create a container element and give it an ID
 
     container.classList.add('container');
     container.id = 'container';

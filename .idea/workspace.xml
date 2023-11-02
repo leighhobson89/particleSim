@@ -7,7 +7,9 @@
     <list default="true" id="bc22efed-34bf-46e1-882e-35b53132cf83" name="Changes" comment="particles can now move to the right and collide with the right edge">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/gameloop.js" beforeDir="false" afterPath="$PROJECT_DIR$/gameloop.js" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/index.html" beforeDir="false" afterPath="$PROJECT_DIR$/index.html" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/styles.css" beforeDir="false" afterPath="$PROJECT_DIR$/styles.css" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/ui.js" beforeDir="false" afterPath="$PROJECT_DIR$/ui.js" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -76,7 +78,7 @@
       <workItem from="1697463082629" duration="719000" />
       <workItem from="1697470717090" duration="3758000" />
       <workItem from="1698912260467" duration="2940000" />
-      <workItem from="1698937212781" duration="2412000" />
+      <workItem from="1698937212781" duration="3615000" />
     </task>
     <task id="LOCAL-00001" summary="tidy up">
       <option name="closed" value="true" />
@@ -94,7 +96,15 @@
       <option name="project" value="LOCAL" />
       <updated>1698915075411</updated>
     </task>
-    <option name="localTasksCounter" value="3" />
+    <task id="LOCAL-00003" summary="particles can now move to the right and collide with the right edge">
+      <option name="closed" value="true" />
+      <created>1698939809147</created>
+      <option name="number" value="00003" />
+      <option name="presentableId" value="LOCAL-00003" />
+      <option name="project" value="LOCAL" />
+      <updated>1698939809147</updated>
+    </task>
+    <option name="localTasksCounter" value="4" />
     <servers />
   </component>
   <component name="TypeScriptGeneratedFilesManager">

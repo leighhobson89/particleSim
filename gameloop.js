@@ -54,9 +54,12 @@ function gameLoop() {
 createTitleScreen();
 
 document.getElementById('option1').addEventListener('click', function () {
+
     // Remove all buttons from the screen
     const options = document.querySelector('.options');
+    const inGameOptions = document.querySelector('.inGameOptions');
     options.style.display = 'none';
+    inGameOptions.style.display = 'flex';
     container.style.display = "flex";
     let containerWidth = getContainerWidth();
     let containerHeight = getContainerHeight();
